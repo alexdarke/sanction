@@ -1,0 +1,15 @@
+#wget of file based on country name:
+#
+#http://www.ipdeny.com/ipblocks/data/countries/cn.zone
+#
+#accept options: right now just do COUNTRY and PORT (port to block or ALL)
+#
+#then
+#
+#for i in $(cat cn.zone) ; do iptables -A INPUT -s $i -j DROP; done
+
+#!/bin/bash
+#
+
+echo "Country = $1";
+echo "Port = $2";
