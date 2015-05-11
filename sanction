@@ -11,5 +11,16 @@
 #!/bin/bash
 #
 
-echo "Country = $1";
-echo "Port = $2";
+echo "To filter by country, you'll need to provide the 2 letter country code.";
+echo "If you are unsure, you can find them via web sites, such as:";
+echo " http://www.immigration-usa.com/country_digraphs.html";
+echo "";
+read -p "Country: "; 
+
+echo "Port filter can either be a specific port (ie, 80) or ALL to block all ports.";
+
+read -p "Port: "; 
+
+echo "Country = $Country";
+echo "Port = $Port";
+read -p 'Continue (y/n)? ' -n1 answer; echo; [[ $answer = [yY] ]] || return
