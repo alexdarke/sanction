@@ -2,8 +2,9 @@ Sanction - to impose a sanction on; penalize, especially by way of discipline.
 
 ===============================================================================
 
-Sanction - A quick and effective method to block entire ip blocks belonging 
-to a specific country. You can block a specific port or ban the IP outright.
+This script is meant to be a quick and effective method to block entire ip 
+blocks belonging  to a specific country. You can block a specific port or ban 
+the IP outright.
 
 Note: Long term firewall management is better handled by an external device
 (firewall, DoS mitigation services, etc). That said, sometimes you need a 
@@ -12,8 +13,7 @@ where Sanction comes in.
 
 Example usage:
 
-================================================================
-
+...
 [darke@pabu sanction]$ sudo ./sanction 
 
 Enter the name of the country to block : China
@@ -35,8 +35,7 @@ To remove them, run the command (as root):
 /tmp/sanction.remove.cn.rules
 
 or just restart iptables.
-
-================================================================
+...
 
 In the event more than one country is matched, it will present you a menu
 of options.
