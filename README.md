@@ -27,8 +27,6 @@ Current wishlist: write the iptables rules into their own chain.
 
 Changelog:
 
-0.9.2 : Modification of matching on ALL.
-
-0.9.1 : Routines for multiple country matches and error checking in place. 
+0.9.2 : Routines for multiple country matches and error checking in place. 
 	General clean up of code and pushed to public beta.
 
