@@ -1,7 +1,11 @@
 #!/bin/bash
 #
 # Sanction - A quick and effective method to block entire ip blocks belonging 
-# to a specific country. You can block a specific port or ban the IP outright.
+# to a specific country. You can block a specific port or ban the IPs outright.
+#
+# Version: 0.9.1
+#
+# Written by Alex Darke (adarke@gmail.com) 5/10/2015
 
 countryList="inc/countryList"
 

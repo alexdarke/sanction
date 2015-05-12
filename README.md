@@ -24,3 +24,9 @@ of options.
 Any issues, questions, or ideas for improvements can be sent to adarke@gmail.com
 
 Current wishlist: write the iptables rules into their own chain.
+
+Changelog:
+
+0.9.1 : Routines for multiple country matches and error checking in place. 
+	General clean up of code and pushed to public beta.
+
