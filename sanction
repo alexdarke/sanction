@@ -39,7 +39,7 @@ while true
 echo
 echo
 
-grep -i $Country $countryList;
+grep -i $Country $countryList >/dev/null 2>/dev/null;
 if [ $? -ne 0 ] ; then echo "Unable to find the country you specified ($Country). Please check the spelling and try again."; echo; exit 1; fi
 
 #Check to ensure there's only one match:
