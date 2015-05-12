@@ -11,12 +11,12 @@ Note: Long term firewall management is better handled by an external device
 quick way to stem the tide until you can get those services in place. That's
 where Sanction comes in.
 
-usage:
+Example usage:
 
-[darke@pabu sanction]$ sudo ./sanction 
+![sanction usage example shot](screenshot/sanction.png?raw=true "sanction usage example shot")
 
-You will be prompted for the options and provided with a script to remove the
-iptables rules that sanction creates.
+You will be prompted for the options (or choices) and you will be provided 
+with a script to remove the iptables rules that sanction creates.
 
 In the event more than one country is matched, it will present you a menu
 of options.
