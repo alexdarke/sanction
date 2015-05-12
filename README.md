@@ -13,7 +13,7 @@ where Sanction comes in.
 
 Example usage:
 
-![sanction usage example shot](screenshot/sanction.png?raw=true "sanction usage example shot")
+![sanction usage example shot](screenshot/sanction.png "sanction usage example shot")
 
 You will be prompted for the options (or choices) and you will be provided 
 with a script to remove the iptables rules that sanction creates.
