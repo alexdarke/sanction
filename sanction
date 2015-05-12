@@ -3,9 +3,10 @@
 # Sanction - A quick and effective method to block entire ip blocks belonging 
 # to a specific country. You can block a specific port or ban the IPs outright.
 #
-# Version: 0.9.1
+# Version: 0.9.2
 #
 # Written by Alex Darke (adarke@gmail.com) 5/10/2015
+# Thanks to IPDeny.com for providing the publicly available IP blocks. www.ipdeny.com
 
 countryList="inc/countryList"
 
@@ -21,10 +22,12 @@ read Country
 echo -n "Enter the specific port number to block or ALL to block all access: "
 read Port
 
+Port=$(echo $Port | tr [a-z] [A-Z]);
 echo
 echo "Country = $Country";
 echo "Port = $Port";
 echo
+
 
 while true
 	do
