@@ -24,7 +24,9 @@ of options.
 
 Any issues, questions, or ideas for improvements can be sent to adarke@gmail.com
 
-Current wishlist: write the iptables rules into their own chain.
+Current wishlist: write the iptables rules into their own chain, multiple country
+	entries, and setting it up to accept command line parameters rather than
+	just interactive.
 
 Changelog:
 
