@@ -12,6 +12,7 @@ where Sanction comes in.
 
 Example usage:
 
+================================================================
 
 [darke@pabu sanction]$ sudo ./sanction 
 
@@ -35,5 +36,9 @@ To remove them, run the command (as root):
 
 or just restart iptables.
 
+================================================================
 
+In the event more than one country is matched, it will present you a menu
+of options.
 
+Any issues, questions, or ideas for improvements can be sent to adarke@gmail.com
