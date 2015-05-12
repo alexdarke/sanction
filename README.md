@@ -7,9 +7,10 @@ blocks belonging  to a specific country. You can block a specific port or ban
 the IP outright.
 
 Note: Long term network filtering management is better handled by an external 
-device (firewall, DoS mitigation services, etc). That said, sometimes you need 
-a quick way to stem the tide until you can get those services in place. That's
-where Sanction comes in.
+device (firewall, DoS mitigation services, etc) for a variety of reasons I am 
+not going to get into in a README. That said, sometimes you need a quick way 
+to stem the tide until you can get those services in place. That's where 
+Sanction hopefully comes in.
 
 Example usage:
 
