@@ -13,9 +13,13 @@ countryList="inc/countryList"
 
 
 if [ "$EUID" -ne 0 ]
-  then echo "Because this script generates and applies IPtables rules, root level access is required."
+  then echo "Because this script generates and applies IPtables/IPset rules, root level access is required."
   exit
 fi
+
+#check if ipset is installed
+# install it if not
+
 
 echo
 echo -n "Enter the name of the country to block : "
