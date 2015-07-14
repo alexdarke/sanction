@@ -218,8 +218,8 @@ else
 
 	tableRule=`iptables -L | grep sanction`
 	if [ -z "$tableRule" ] ; then
-		iptables -I INPUT -m set --set sanction src -j DROP >/dev/null 2>/dev/null;
-		iptables -I INPUT -m set --set sanction-port src -j DROP >/dev/null 2>/dev/null;
+		iptables -I INPUT -m set --set sanction src,dst -j DROP >/dev/null 2>/dev/null;
+		iptables -I INPUT -m set --set sanction-port src,dst -j DROP >/dev/null 2>/dev/null;
 	fi
 
         echo

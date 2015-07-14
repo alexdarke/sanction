@@ -32,6 +32,8 @@ Current wishlist: write the iptables rules into their own chain, multiple countr
 
 Changelog:
 
+0.9.5 : fixed a bug with ipset not honoring rules in 6.11-3
+
 0.9.4 : ipset support added, if ipset is installed
 
 0.9.3 : Clean up of rule generation.
