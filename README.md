@@ -12,7 +12,7 @@ Note: Long term network filtering management is better handled by an external
 device (firewall, DoS mitigation services, etc) for a variety of reasons I am 
 not going to get into in a README. That said, sometimes you need a quick way 
 to stem the tide until you can get those services in place. That's where 
-Sanction hopefully comes in.
+Sanction hopefully comes in handy.
 
 Example usage:
 

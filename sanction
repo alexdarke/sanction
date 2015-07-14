@@ -3,7 +3,7 @@
 # Sanction - A quick and effective method to block entire ip blocks belonging 
 # to a specific country. You can block a specific port or ban the IPs outright.
 #
-# Version: 0.9.2
+# Version: 0.9.4
 #
 # Written by Alex Darke (adarke@gmail.com) 5/10/2015
 #
@@ -396,3 +396,5 @@ else
 
 	
 fi	
+
+
