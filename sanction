@@ -17,180 +17,382 @@ if [ "$EUID" -ne 0 ]
   exit
 fi
 
-#check if ipset is installed
-# install it if not
+if ! [ -x "$(command -v ipset)" ]; then
+  echo 'ipset is not installed. Continuing using iptables...' >&2
 
 
-echo
-echo -n "Enter the name of the country to block : "
-read Country
-echo -n "Enter the specific port number to block or ALL to block all access: "
-read Port
+	echo
+	echo -n "Enter the name of the country to block : "
+	read Country
+	echo -n "Enter the specific port number to block or ALL to block all access: "
+	read Port
 
-Port=$(echo $Port | tr [a-z] [A-Z]);
-echo
-echo "Country = $Country";
-echo "Port = $Port";
-echo
+	Port=$(echo $Port | tr [a-z] [A-Z]);
+	echo
+	echo "Country = $Country";
+	echo "Port = $Port";
+	echo
 
 
-while true
-	do
-		echo -n "Please confirm (y or n) : "
-		read CONFIRM
-		case $CONFIRM in
-			y|Y|YES|yes|Yes) break ;;
-			n|N|no|NO|No)
-		echo Aborting 
-		echo
-		exit
-		;;
-		*) echo Please enter only y or n
-	esac
+	while true
+		do
+			echo -n "Please confirm (y or n) : "
+			read CONFIRM
+			case $CONFIRM in
+				y|Y|YES|yes|Yes) break ;;
+				n|N|no|NO|No)
+			echo Aborting 
+			echo
+			exit
+			;;
+			*) echo Please enter only y or n
+		esac
 	done
-echo
-echo
+	echo
+	echo
 
-grep -i $Country $countryList >/dev/null 2>/dev/null;
-if [ $? -ne 0 ] ; then echo "Unable to find the country you specified ($Country). Please check the spelling and try again."; echo; exit 1; fi
+	grep -i $Country $countryList >/dev/null 2>/dev/null;
 
-#Check to ensure there's only one match:
-matchCount=$(grep -i $Country $countryList | awk '{print $1}' | wc -l);
-
-
-if [ $matchCount -eq 1 ] ; then
-
-	countryCode=$(grep -i $Country $countryList | awk '{print $1}' | tr "[:upper:]" "[:lower:]")
-	countryName=$(grep -i $Country $countryList | awk '{print $2}')
-
-	echo "$countryName is the 2 letter abbreviation: $countryCode";
-	echo "Obtaining IP blocks now..."
-	wget -P /tmp http://www.ipdeny.com/ipblocks/data/countries/$countryCode.zone >/dev/null 2>/dev/null;
-
-        if [ $? -ne 0 ] ; then echo "Unable to find IP blocks for $countryCode / $countryName. Aborting."; exit 1; fi
-
-	echo "Formulating IPTables rules..."
-	
-	echo "#!/bin/bash" > /tmp/sanction.$countryCode.rules;
-	echo "#!/bin/bash" > /tmp/sanction.remove.$countryCode.rules;
-
-	if [ $Port = "ALL" ] ; then
-	
-		for i in $(cat /tmp/$countryCode.zone) ; 
-			do echo "iptables -A INPUT -s $i -j DROP" >> /tmp/sanction.$countryCode.rules; 
-		done
-                for i in $(cat /tmp/$countryCode.zone) ;
-                        do echo "iptables -D INPUT -s $i -j DROP" >> /tmp/sanction.remove.$countryCode.rules;
-                done
-
-	else
-		for i in $(cat /tmp/$countryCode.zone) ;
-			do echo "iptables -A INPUT -s $i -p tcp --dport $Port -j DROP" >> /tmp/sanction.$countryCode.rules;
-		done
-		for i in $(cat /tmp/$countryCode.zone) ;
-                        do echo "iptables -D INPUT -s $i -p tcp --dport $Port -j DROP" >> /tmp/sanction.remove.$countryCode.rules;
-                done
+	if [ $? -ne 0 ] ; then 
+		echo "Unable to find the country you specified ($Country). Please check the spelling and try again."; echo; 
+		exit 1; 
 	fi
 
-        echo "rm /tmp/sanction.remove.$countryCode.rules;" >> /tmp/sanction.remove.$countryCode.rules;
+	#Check to ensure there's only one match:
+	matchCount=$(grep -i $Country $countryList | awk '{print $1}' | wc -l);
 
-	echo "Applying IPtables rules..."
-	chmod +x /tmp/sanction.$countryCode.rules;
-	chmod +x /tmp/sanction.remove.$countryCode.rules;
-	/tmp/sanction.$countryCode.rules;
 
-	echo 
-	echo "Success! The requested rules have been applied."
-	echo "To remove them, run the command (as root):"
-	echo
-	echo "/tmp/sanction.remove.$countryCode.rules"
-	echo
-	echo "or just restart iptables."
+	if [ $matchCount -eq 1 ] ; then
+
+		countryCode=$(grep -i $Country $countryList | awk '{print $1}' | tr "[:upper:]" "[:lower:]")
+		countryName=$(grep -i $Country $countryList | awk '{print $2}')
+
+		echo "$countryName is the 2 letter abbreviation: $countryCode";
+		echo "Obtaining IP blocks now..."
+		wget -P /tmp http://www.ipdeny.com/ipblocks/data/countries/$countryCode.zone >/dev/null 2>/dev/null;
+
+        	if [ $? -ne 0 ] ; then 
+			echo "Unable to find IP blocks for $countryCode / $countryName. Aborting."; 
+			exit 1; 
+		fi
+
+		echo "Formulating IPTables rules..."
+	
+		echo "#!/bin/bash" > /tmp/sanction.$countryCode.rules;
+		echo "#!/bin/bash" > /tmp/sanction.remove.$countryCode.rules;
+
+		if [ $Port = "ALL" ] ; then
+	
+			for i in $(cat /tmp/$countryCode.zone) ; 
+				do echo "iptables -A INPUT -s $i -j DROP" >> /tmp/sanction.$countryCode.rules; 
+			done
+                	for i in $(cat /tmp/$countryCode.zone) ;
+                        	do echo "iptables -D INPUT -s $i -j DROP" >> /tmp/sanction.remove.$countryCode.rules;
+                	done
+
+		else
+			for i in $(cat /tmp/$countryCode.zone) ;
+				do echo "iptables -A INPUT -s $i -p tcp --dport $Port -j DROP" >> /tmp/sanction.$countryCode.rules;
+			done
+			for i in $(cat /tmp/$countryCode.zone) ;
+                        	do echo "iptables -D INPUT -s $i -p tcp --dport $Port -j DROP" >> /tmp/sanction.remove.$countryCode.rules;
+                	done
+		fi
+
+        	echo "rm /tmp/sanction.remove.$countryCode.rules;" >> /tmp/sanction.remove.$countryCode.rules;
+
+		echo "Applying IPtables rules..."
+		chmod +x /tmp/sanction.$countryCode.rules;
+		chmod +x /tmp/sanction.remove.$countryCode.rules;
+		/tmp/sanction.$countryCode.rules;
+
+		echo 
+		echo "Success! The requested rules have been applied."
+		echo "To remove them, run the command (as root):"
+		echo
+		echo "/tmp/sanction.remove.$countryCode.rules"
+		echo
+		echo "or just restart iptables."
 	
 
-else 
+	else 
 
-	echo "Warning! There were multiple matches for the country you asked for."
-	echo
+		echo "Warning! There were multiple matches for the country you asked for."
+		echo
 
-        OLDIFS=$IFS
-        IFS=$'\n'
+        	OLDIFS=$IFS
+        	IFS=$'\n'
 
-        lines=($(grep -i $Country $countryList))
+        	lines=($(grep -i $Country $countryList))
 
-	createmenu () {
-	PS3="Select which Country to use: "
-  	select option; do 
-    		if [ "$REPLY" -gt "$#" ]; then
-      			echo "This shouldn't happen OMG"
-      		break;
-    		elif [ 1 -le "$REPLY" ] || [ "$REPLY" -le $(($#-1)) ]; then
-			chosen=$option;
-      		break;
-    		else
-      		echo "Incorrect Input: Select a number 1-$#"
-    		fi
-  	done
-	}
+		createmenu () {
+			PS3="Select which Country to use: "
+  			select option; do 
+    				if [ "$REPLY" -gt "$#" ]; then
+      					echo "This shouldn't happen OMG"
+      					break;
+    				elif [ 1 -le "$REPLY" ] || [ "$REPLY" -le $(($#-1)) ]; then
+					chosen=$option;
+      					break;
+    				else
+      					echo "Incorrect Input: Select a number 1-$#"
+    				fi
+  			done
+		}
 
-	createmenu "${lines[@]}"
+		createmenu "${lines[@]}"
 
-	IFS=$OLDIFS
-	echo
-	echo "You picked:  $chosen";
+		IFS=$OLDIFS
+		echo
+		echo "You picked:  $chosen";
 
 #second pass for select menu option
 	
-	countryCode=$(echo $chosen| awk '{print $1}' | tr "[:upper:]" "[:lower:]")
-	countryName=$(echo $chosen| awk '{print $2}')
+		countryCode=$(echo $chosen| awk '{print $1}' | tr "[:upper:]" "[:lower:]")
+		countryName=$(echo $chosen| awk '{print $2}')
 
 
-        echo "Obtaining IP blocks now..."
-        wget -P /tmp http://www.ipdeny.com/ipblocks/data/countries/$countryCode.zone >/dev/null 2>/dev/null;
+       		 echo "Obtaining IP blocks now..."
+	        wget -P /tmp http://www.ipdeny.com/ipblocks/data/countries/$countryCode.zone >/dev/null 2>/dev/null;
 	
-	if [ $? -ne 0 ] ; then echo "Unable to find IP blocks for $countryCode / $countryName. Aborting."; exit 1; fi
+		if [ $? -ne 0 ] ; then echo "Unable to find IP blocks for $countryCode / $countryName. Aborting."; exit 1; fi
 
-        echo "Formulating IPTables rules..."
+	        echo "Formulating IPTables rules..."
+   		echo
+
+	        echo "#!/bin/bash" > /tmp/sanction.$countryCode.rules;
+       		echo "#!/bin/bash" > /tmp/sanction.remove.$countryCode.rules;
+
+	        if [ $Port = "ALL" ] ; then
+
+        	        for i in $(cat /tmp/$countryCode.zone) ;
+                	        do echo "iptables -A INPUT -s $i -j DROP" >> /tmp/sanction.$countryCode.rules;
+                	done
+                	for i in $(cat /tmp/$countryCode.zone) ;
+                        	do echo "iptables -D INPUT -s $i -j DROP" >> /tmp/sanction.remove.$countryCode.rules;
+                	done
+
+        	else
+                	for i in $(cat /tmp/$countryCode.zone) ;
+                        	do echo "iptables -A INPUT -s $i -p tcp --dport $Port -j DROP" >> /tmp/sanction.$countryCode.rules;
+                	done
+                	for i in $(cat /tmp/$countryCode.zone) ;
+                        	do echo "iptables -D INPUT -s $i -p tcp --dport $Port -j DROP" >> /tmp/sanction.remove.$countryCode.rules;
+                	done
+    		fi
+
+		echo "rm /tmp/sanction.remove.$countryCode.rules;" >> /tmp/sanction.remove.$countryCode.rules;
+
+	        echo
+        	echo "Applying IPtables rules..."
+        	echo
+        	chmod +x /tmp/sanction.$countryCode.rules;
+        	chmod +x /tmp/sanction.remove.$countryCode.rules;
+        	/tmp/sanction.$countryCode.rules;
+
+        	echo "Rules applied. To remove them, run the command (as root):"
+        	echo
+        	echo "/tmp/sanction.remove.$countryCode.rules"
+        	echo
+        	echo "or just restart iptables."
+
+
+	fi
+
+	rm /tmp/*.zone;
+	rm /tmp//sanction.$countryCode.rules;
+
+else
+
+	#Make sure the kernel modules are loaded
+	modprobe -v ip_set >/dev/null 2>/dev/null;
+	modprobe -v ip_set_hash_netport >/dev/null 2>/dev/null;
+
+	#Create the ipset for sanction with port 
+	ipset create sanction-port hash:net,port >/dev/null 2>/dev/null;
+	
+	#Create the ipset for sanction just by ip
+	ipset create sanction hash:net >/dev/null 2>/dev/null;
+
+	#Create the iptables rule to match the ipset lists
+
+	tableRule=`iptables -L | grep sanction`
+	if [ -z "$tableRule" ] ; then
+		iptables -I INPUT -m set --set sanction src -j DROP >/dev/null 2>/dev/null;
+		iptables -I INPUT -m set --set sanction-port src -j DROP >/dev/null 2>/dev/null;
+	fi
+
+        echo
+        echo -n "Enter the name of the country to block : "
+        read Country
+        echo -n "Enter the specific port number to block or ALL to block all access: "
+        read Port
+
+        Port=$(echo $Port | tr [a-z] [A-Z]);
+        echo
+        echo "Country = $Country";
+        echo "Port = $Port";
         echo
 
-        echo "#!/bin/bash" > /tmp/sanction.$countryCode.rules;
-        echo "#!/bin/bash" > /tmp/sanction.remove.$countryCode.rules;
 
-        if [ $Port = "ALL" ] ; then
+        while true
+                do
+                        echo -n "Please confirm (y or n) : "
+                        read CONFIRM
+                        case $CONFIRM in
+                                y|Y|YES|yes|Yes) break ;;
+                                n|N|no|NO|No)
+                        echo Aborting 
+                        echo
+                        exit
+                        ;;
+                        *) echo Please enter only y or n
+                esac
+        done
+        echo
+        echo
 
-                for i in $(cat /tmp/$countryCode.zone) ;
-                        do echo "iptables -A INPUT -s $i -j DROP" >> /tmp/sanction.$countryCode.rules;
-                done
-                for i in $(cat /tmp/$countryCode.zone) ;
-                        do echo "iptables -D INPUT -s $i -j DROP" >> /tmp/sanction.remove.$countryCode.rules;
-                done
+        grep -i $Country $countryList >/dev/null 2>/dev/null;
 
-        else
-                for i in $(cat /tmp/$countryCode.zone) ;
-                        do echo "iptables -A INPUT -s $i -p tcp --dport $Port -j DROP" >> /tmp/sanction.$countryCode.rules;
-                done
-                for i in $(cat /tmp/$countryCode.zone) ;
-                        do echo "iptables -D INPUT -s $i -p tcp --dport $Port -j DROP" >> /tmp/sanction.remove.$countryCode.rules;
-                done
+        if [ $? -ne 0 ] ; then
+                echo "Unable to find the country you specified ($Country). Please check the spelling and try again."; echo;
+                exit 1;
         fi
 
-	echo "rm /tmp/sanction.remove.$countryCode.rules;" >> /tmp/sanction.remove.$countryCode.rules;
+        #Check to ensure there's only one match:
+        matchCount=$(grep -i $Country $countryList | awk '{print $1}' | wc -l);
 
-        echo
-        echo "Applying IPtables rules..."
-        echo
-        chmod +x /tmp/sanction.$countryCode.rules;
-        chmod +x /tmp/sanction.remove.$countryCode.rules;
-        /tmp/sanction.$countryCode.rules;
+        if [ $matchCount -eq 1 ] ; then
 
-        echo "Rules applied. To remove them, run the command (as root):"
-        echo
-        echo "/tmp/sanction.remove.$countryCode.rules"
-        echo
-        echo "or just restart iptables."
+                countryCode=$(grep -i $Country $countryList | awk '{print $1}' | tr "[:upper:]" "[:lower:]")
+                countryName=$(grep -i $Country $countryList | awk '{print $2}')
+
+                echo "$countryName is the 2 letter abbreviation: $countryCode";
+                echo "Obtaining IP blocks now..."
+                wget -P /tmp http://www.ipdeny.com/ipblocks/data/countries/$countryCode.zone >/dev/null 2>/dev/null;
+
+                if [ $? -ne 0 ] ; then
+                        echo "Unable to find IP blocks for $countryCode / $countryName. Aborting.";
+                        exit 1;
+                fi
+
+                echo "Formulating IPset rules..."
+
+                echo "#!/bin/bash" > /tmp/sanction.$countryCode.rules;
+                echo "#!/bin/bash" > /tmp/sanction.remove.$countryCode.rules;
+
+                if [ $Port = "ALL" ] ; then
+                        for i in $(cat /tmp/$countryCode.zone) ;
+                                do echo "ipset add sanction $i" >> /tmp/sanction.$countryCode.rules;
+                        done
+                        for i in $(cat /tmp/$countryCode.zone) ;
+                                do echo "ipset del sanction $i" >> /tmp/sanction.remove.$countryCode.rules;
+                        done
+
+                else
+                        for i in $(cat /tmp/$countryCode.zone) ;
+                                do echo "ipset add sanction-port $i,$Port" >> /tmp/sanction.$countryCode.rules;
+                        done
+                        for i in $(cat /tmp/$countryCode.zone) ;
+                                do echo "ipset del sanction-port $i,$Port" >> /tmp/sanction.remove.$countryCode.rules;
+                        done
+                fi
+
+                echo "rm /tmp/sanction.remove.$countryCode.rules;" >> /tmp/sanction.remove.$countryCode.rules;
+
+                echo "Applying IPset rules..."
+                chmod +x /tmp/sanction.$countryCode.rules;
+                chmod +x /tmp/sanction.remove.$countryCode.rules;
+                /tmp/sanction.$countryCode.rules;
+
+                echo "Rules applied. To remove them, run the command (as root):"
+                echo
+                echo "/tmp/sanction.remove.$countryCode.rules"
+
+        else
+
+                echo "Warning! There were multiple matches for the country you asked for."
+                echo
+
+                OLDIFS=$IFS
+                IFS=$'\n'
+
+                lines=($(grep -i $Country $countryList))
+
+                createmenu () {
+                        PS3="Select which Country to use: "
+                        select option; do
+                                if [ "$REPLY" -gt "$#" ]; then
+                                        echo "This shouldn't happen OMG"
+                                        break;
+                                elif [ 1 -le "$REPLY" ] || [ "$REPLY" -le $(($#-1)) ]; then
+                                        chosen=$option;
+                                        break;
+                                else
+                                        echo "Incorrect Input: Select a number 1-$#"
+                                fi
+                        done
+                }
+
+                createmenu "${lines[@]}"
+
+                IFS=$OLDIFS
+                echo
+                echo "You picked:  $chosen";
+
+#second pass for select menu option
+
+                countryCode=$(echo $chosen| awk '{print $1}' | tr "[:upper:]" "[:lower:]")
+                countryName=$(echo $chosen| awk '{print $2}')
 
 
-fi
+                 echo "Obtaining IP blocks now..."
+                wget -P /tmp http://www.ipdeny.com/ipblocks/data/countries/$countryCode.zone >/dev/null 2>/dev/null;
 
-rm /tmp/*.zone;
-rm /tmp//sanction.$countryCode.rules;
+                if [ $? -ne 0 ] ; then echo "Unable to find IP blocks for $countryCode / $countryName. Aborting."; exit 1; fi
+
+                echo "Formulating IPset rules..."
+                echo
+
+                echo "#!/bin/bash" > /tmp/sanction.$countryCode.rules;
+                echo "#!/bin/bash" > /tmp/sanction.remove.$countryCode.rules;
+
+                if [ $Port = "ALL" ] ; then
+
+                        for i in $(cat /tmp/$countryCode.zone) ;
+                                do echo "ipset add sanction $i" >> /tmp/sanction.$countryCode.rules;
+                        done
+                        for i in $(cat /tmp/$countryCode.zone) ;
+                                do echo "ipset del sanction $i" >> /tmp/sanction.remove.$countryCode.rules;
+                        done
+
+                else
+                        for i in $(cat /tmp/$countryCode.zone) ;
+                                do echo "ipset add sanction-port $i,$Port" >> /tmp/sanction.$countryCode.rules;
+                        done
+                        for i in $(cat /tmp/$countryCode.zone) ;
+                                do echo "ipset del sanction-port $i,$Port" >> /tmp/sanction.remove.$countryCode.rules;
+                        done
+                fi
+
+                echo "rm /tmp/sanction.remove.$countryCode.rules;" >> /tmp/sanction.remove.$countryCode.rules;
+
+                echo
+                echo "Applying IPset rules..."
+                echo
+                chmod +x /tmp/sanction.$countryCode.rules;
+                chmod +x /tmp/sanction.remove.$countryCode.rules;
+                /tmp/sanction.$countryCode.rules;
+
+                echo "Rules applied. To remove them, run the command (as root):"
+                echo
+                echo "/tmp/sanction.remove.$countryCode.rules"
+
+
+        fi
+
+        rm /tmp/*.zone;
+        rm /tmp//sanction.$countryCode.rules;
+
+	
+fi	
