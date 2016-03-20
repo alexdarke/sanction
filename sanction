@@ -3,7 +3,7 @@
 # Sanction - A quick and effective method to block entire ip blocks belonging 
 # to a specific country. You can block a specific port or ban the IPs outright.
 #
-# Version: 0.9.4
+# Version: 1.0.0
 #
 # Written by Alex Darke (adarke@gmail.com) 5/10/2015
 #
@@ -50,8 +50,7 @@ if ! [ -x "$(command -v ipset)" ]; then
 	done
 	echo
 	echo
-
-	grep -i $Country $countryList >/dev/null 2>/dev/null;
+	grep -i "$Country" $countryList >/dev/null 2>/dev/null;
 
 	if [ $? -ne 0 ] ; then 
 		echo "Unable to find the country you specified ($Country). Please check the spelling and try again."; echo; 
@@ -59,13 +58,14 @@ if ! [ -x "$(command -v ipset)" ]; then
 	fi
 
 	#Check to ensure there's only one match:
-	matchCount=$(grep -i $Country $countryList | awk '{print $1}' | wc -l);
+	matchCount=$(grep -i "$Country" $countryList | awk '{print $1}' | wc -l);
 
 
 	if [ $matchCount -eq 1 ] ; then
 
 		countryCode=$(grep -i $Country $countryList | awk '{print $1}' | tr "[:upper:]" "[:lower:]")
-		countryName=$(grep -i $Country $countryList | awk '{print $2}')
+		#countryName=$(grep -i $Country $countryList | awk '{print $2}')
+		countryName=$(grep -i "$Country" $countryList | awk '{out=$2; for(i=3;i<=NF;i++){out=out" "$i}; print out}')
 
 		echo "$countryName is the 2 letter abbreviation: $countryCode";
 		echo "Obtaining IP blocks now..."
@@ -252,7 +252,7 @@ else
         echo
         echo
 
-        grep -i $Country $countryList >/dev/null 2>/dev/null;
+        grep -i "$Country" $countryList >/dev/null 2>/dev/null;
 
         if [ $? -ne 0 ] ; then
                 echo "Unable to find the country you specified ($Country). Please check the spelling and try again."; echo;
@@ -260,12 +260,13 @@ else
         fi
 
         #Check to ensure there's only one match:
-        matchCount=$(grep -i $Country $countryList | awk '{print $1}' | wc -l);
+        matchCount=$(grep -i "$Country" $countryList | awk '{print $1}' | wc -l);
 
         if [ $matchCount -eq 1 ] ; then
 
-                countryCode=$(grep -i $Country $countryList | awk '{print $1}' | tr "[:upper:]" "[:lower:]")
-                countryName=$(grep -i $Country $countryList | awk '{print $2}')
+                countryCode=$(grep -i "$Country" $countryList | awk '{print $1}' | tr "[:upper:]" "[:lower:]")
+                #countryName=$(grep -i "$Country" $countryList | awk '{print $2}')
+		countryName=$(grep -i "$Country" $countryList | awk '{out=$2; for(i=3;i<=NF;i++){out=out" "$i}; print out}')
 
                 echo "$countryName is the 2 letter abbreviation: $countryCode";
                 echo "Obtaining IP blocks now..."
@@ -317,7 +318,7 @@ else
                 OLDIFS=$IFS
                 IFS=$'\n'
 
-                lines=($(grep -i $Country $countryList))
+                lines=($(grep -i "$Country" $countryList))
 
                 createmenu () {
                         PS3="Select which Country to use: "

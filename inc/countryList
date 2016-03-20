@@ -5,7 +5,7 @@ AG   Antigua and Barbuda
 AI   Anguilla
 AL   Albania
 AM   Armenia
-AN   Netherland Antilles
+AN   Netherlands Antilles
 AO   Angola
 AQ   Antarctica
 AR   Argentina
@@ -34,11 +34,11 @@ BW   Botswana
 BY   Belarus
 BZ   Belize
 CA   Canada
-CC   Cocos (Keeling) Isl.
-CF   Central African Rep.
+CC   Cocos Islands
+CF   Central African Republic
 CG   Congo
 CH   Switzerland
-CI   Ivory Coast
+CI   Cote D'Ivoire (Ivory Coast)
 CK   Cook Islands
 CL   Chile
 CM   Cameroon
@@ -61,34 +61,36 @@ EC   Ecuador
 EE   Estonia
 EG   Egypt
 EH   Western Sahara
+ER   Eritrea
 ES   Spain
 ET   Ethiopia
 FI   Finland
 FJ   Fiji
-FK   Falkland Isl.(Malvinas)
+FK   Falkland Islands
 FM   Micronesia
 FO   Faroe Islands
 FR   France
-FX   France (European Ter.)
+FX   France, Metropolitan
 GA   Gabon
-GB   Great Britain (UK)
+GB   Great Britain
 GD   Grenada
 GE   Georgia
+GF   French Guiana
 GH   Ghana
 GI   Gibraltar
 GL   Greenland
-GP   Guadeloupe (Fr.)
-GQ   Equatorial Guinea
-GF   Guyana (Fr.)
 GM   Gambia
 GN   Guinea
+GP   Guadeloupe
+GQ   Equatorial Guinea
 GR   Greece
+GS   S. Georgia and S. Sandwich Isls.
 GT   Guatemala
-GU   Guam (US)
+GU   Guam 
 GW   Guinea Bissau
 GY   Guyana
 HK   Hong Kong
-HM   Heard & McDonald Isl.
+HM   Heard and McDonald Islands
 HN   Honduras
 HR   Croatia
 HT   Haiti
@@ -97,7 +99,7 @@ ID   Indonesia
 IE   Ireland
 IL   Israel
 IN   India
-IO   British Indian O. Terr.
+IO   British Indian Ocean Territory
 IQ   Iraq
 IR   Iran
 IS   Iceland
@@ -106,16 +108,16 @@ JM   Jamaica
 JO   Jordan
 JP   Japan
 KE   Kenya
-KG   Kirgistan
+KG   Kyrgyzstan
 KH   Cambodia
 KI   Kiribati
 KM   Comoros
-KN   St.Kitts Nevis Anguilla
-KP   Korea (North)
-KR   Korea (South)
+KN   Saint Kitts and Nevis
+KP   North Korea
+KR   South Korea
 KW   Kuwait
 KY   Cayman Islands
-KZ   Kazachstan
+KZ   Kazakhstan
 LA   Laos
 LB   Lebanon
 LC   Saint Lucia
@@ -129,14 +131,16 @@ LV   Latvia
 LY   Libya
 MA   Morocco
 MC   Monaco
-MD   Moldavia
+MD   Moldova
 MG   Madagascar
 MH   Marshall Islands
+MK   Macedonia
 ML   Mali
 MM   Myanmar
 MN   Mongolia
 MO   Macau
-MP   Northern Mariana Isl.
+MP   Northern Mariana Islands
+MP   Northern Mariana Islands
 MQ   Martinique (Fr.)
 MR   Mauritania
 MS   Montserrat
@@ -170,8 +174,8 @@ PK   Pakistan
 PL   Poland
 PM   St. Pierre & Miquelon
 PN   Pitcairn
-PT   Portugal
 PR   Puerto Rico (US)
+PT   Portugal
 PW   Palau
 PY   Paraguay
 QA   Qatar
@@ -179,3 +183,62 @@ RE   Reunion (Fr.)
 RO   Romania
 RU   Russian Federation
 RW   Rwanda
+SA   Saudi Arabia
+SB   Solomon Islands
+SC   Seychelles
+SD   Sudan
+SE   Sweden
+SG   Singapore
+SH   St. Helena
+SI   Slovenia
+SJ   Svalbard and Jan Mayen Islands
+SK   Slovak Republic
+SL   Sierra Leone
+SM   San Marino
+SN   Senegal
+SO   Somalia
+SR   Suriname
+ST   Sao Tome and Principe
+SU   USSR
+SV   El Salvador
+SY   Syria
+SZ   Swaziland
+TC   Turks and Caicos Islands
+TD   Chad
+TF   French Southern Territories
+TG   Togo
+TH   Thailand
+TJ   Tajikistan
+TK   Tokelau
+TM   Turkmenistan
+TN   Tunisia
+TO   Tonga
+TP   East Timor
+TR   Turkey
+TT   Trinidad and Tobago
+TV   Tuvalu
+TW   Taiwan
+TZ   Tanzania
+UA   Ukraine
+UG   Uganda
+UK   United Kingdom 
+UM   US Minor Outlying Islands
+US   United States
+UY   Uruguay
+UZ   Uzbekistan
+VA   Vatican City State
+VC   Saint Vincent and the Grenadines
+VE   Venezuela
+VG   Virgin Islands (British)
+VI   Virgin Islands (U.S.)
+VN   Viet Nam
+VU   Vanuatu
+WF   Wallis and Futuna Islands
+WS   Samoa
+YE   Yemen
+YT   Mayotte
+YU   Yugoslavia
+ZA   South Africa
+ZM   Zambia
+ZR   Zaire
+ZW   Zimbabwe
