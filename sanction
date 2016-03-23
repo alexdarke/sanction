@@ -3,13 +3,14 @@
 # Sanction - A quick and effective method to block entire ip blocks belonging 
 # to a specific country. You can block a specific port or ban the IPs outright.
 #
-# Version: 1.0.0
+# Version: 1.0.1
 #
 # Written by Alex Darke (adarke@gmail.com) 5/10/2015
 #
 # Thanks to IPDeny.com for providing the publicly available IP blocks. www.ipdeny.com
 
 countryList="inc/countryList"
+current_time=$(date "+%Y.%m.%d-%H.%M.%S")
 
 
 if [ "$EUID" -ne 0 ]
@@ -79,7 +80,7 @@ if ! [ -x "$(command -v ipset)" ]; then
 		echo "Formulating IPTables rules..."
 	
 		echo "#!/bin/bash" > /tmp/sanction.$countryCode.rules;
-		echo "#!/bin/bash" > /tmp/sanction.remove.$countryCode.rules;
+		echo "#!/bin/bash" > /tmp/sanction.remove.$countryCode.$current_time.rules;
 
 		if [ $Port = "ALL" ] ; then
 	
@@ -87,7 +88,7 @@ if ! [ -x "$(command -v ipset)" ]; then
 				do echo "iptables -A INPUT -s $i -j DROP" >> /tmp/sanction.$countryCode.rules; 
 			done
                 	for i in $(cat /tmp/$countryCode.zone) ;
-                        	do echo "iptables -D INPUT -s $i -j DROP" >> /tmp/sanction.remove.$countryCode.rules;
+                        	do echo "iptables -D INPUT -s $i -j DROP" >> /tmp/sanction.remove.$countryCode.$current_time.rules;
                 	done
 
 		else
@@ -95,22 +96,22 @@ if ! [ -x "$(command -v ipset)" ]; then
 				do echo "iptables -A INPUT -s $i -p tcp --dport $Port -j DROP" >> /tmp/sanction.$countryCode.rules;
 			done
 			for i in $(cat /tmp/$countryCode.zone) ;
-                        	do echo "iptables -D INPUT -s $i -p tcp --dport $Port -j DROP" >> /tmp/sanction.remove.$countryCode.rules;
+                        	do echo "iptables -D INPUT -s $i -p tcp --dport $Port -j DROP" >> /tmp/sanction.remove.$countryCode.$current_time.rules;
                 	done
 		fi
 
-        	echo "rm /tmp/sanction.remove.$countryCode.rules;" >> /tmp/sanction.remove.$countryCode.rules;
+        	echo "rm /tmp/sanction.remove.$countryCode.$current_time.rules;" >> /tmp/sanction.remove.$countryCode.$current_time.rules;
 
 		echo "Applying IPtables rules..."
 		chmod +x /tmp/sanction.$countryCode.rules;
-		chmod +x /tmp/sanction.remove.$countryCode.rules;
+		chmod +x /tmp/sanction.remove.$countryCode.$current_time.rules;
 		/tmp/sanction.$countryCode.rules;
 
 		echo 
 		echo "Success! The requested rules have been applied."
 		echo "To remove them, run the command (as root):"
 		echo
-		echo "/tmp/sanction.remove.$countryCode.rules"
+		echo "/tmp/sanction.remove.$countryCode.$current_time.rules"
 		echo
 		echo "or just restart iptables."
 	
@@ -161,7 +162,7 @@ if ! [ -x "$(command -v ipset)" ]; then
    		echo
 
 	        echo "#!/bin/bash" > /tmp/sanction.$countryCode.rules;
-       		echo "#!/bin/bash" > /tmp/sanction.remove.$countryCode.rules;
+       		echo "#!/bin/bash" > /tmp/sanction.remove.$countryCode.$current_time.rules;
 
 	        if [ $Port = "ALL" ] ; then
 
@@ -169,7 +170,7 @@ if ! [ -x "$(command -v ipset)" ]; then
                 	        do echo "iptables -A INPUT -s $i -j DROP" >> /tmp/sanction.$countryCode.rules;
                 	done
                 	for i in $(cat /tmp/$countryCode.zone) ;
-                        	do echo "iptables -D INPUT -s $i -j DROP" >> /tmp/sanction.remove.$countryCode.rules;
+                        	do echo "iptables -D INPUT -s $i -j DROP" >> /tmp/sanction.remove.$countryCode.$current_time.rules;
                 	done
 
         	else
@@ -177,22 +178,22 @@ if ! [ -x "$(command -v ipset)" ]; then
                         	do echo "iptables -A INPUT -s $i -p tcp --dport $Port -j DROP" >> /tmp/sanction.$countryCode.rules;
                 	done
                 	for i in $(cat /tmp/$countryCode.zone) ;
-                        	do echo "iptables -D INPUT -s $i -p tcp --dport $Port -j DROP" >> /tmp/sanction.remove.$countryCode.rules;
+                        	do echo "iptables -D INPUT -s $i -p tcp --dport $Port -j DROP" >> /tmp/sanction.remove.$countryCode.$current_time.rules;
                 	done
     		fi
 
-		echo "rm /tmp/sanction.remove.$countryCode.rules;" >> /tmp/sanction.remove.$countryCode.rules;
+		echo "rm /tmp/sanction.remove.$countryCode.$current_time.rules;" >> /tmp/sanction.remove.$countryCode.$current_time.rules;
 
 	        echo
         	echo "Applying IPtables rules..."
         	echo
         	chmod +x /tmp/sanction.$countryCode.rules;
-        	chmod +x /tmp/sanction.remove.$countryCode.rules;
+        	chmod +x /tmp/sanction.remove.$countryCode.$current_time.rules;
         	/tmp/sanction.$countryCode.rules;
 
         	echo "Rules applied. To remove them, run the command (as root):"
         	echo
-        	echo "/tmp/sanction.remove.$countryCode.rules"
+        	echo "/tmp/sanction.remove.$countryCode.$current_time.rules"
         	echo
         	echo "or just restart iptables."
 
@@ -280,14 +281,14 @@ else
                 echo "Formulating IPset rules..."
 
                 echo "#!/bin/bash" > /tmp/sanction.$countryCode.rules;
-                echo "#!/bin/bash" > /tmp/sanction.remove.$countryCode.rules;
+                echo "#!/bin/bash" > /tmp/sanction.remove.$countryCode.$current_time.rules;
 
                 if [ $Port = "ALL" ] ; then
                         for i in $(cat /tmp/$countryCode.zone) ;
                                 do echo "ipset add sanction $i" >> /tmp/sanction.$countryCode.rules;
                         done
                         for i in $(cat /tmp/$countryCode.zone) ;
-                                do echo "ipset del sanction $i" >> /tmp/sanction.remove.$countryCode.rules;
+                                do echo "ipset del sanction $i" >> /tmp/sanction.remove.$countryCode.$current_time.rules;
                         done
 
                 else
@@ -295,20 +296,20 @@ else
                                 do echo "ipset add sanction-port $i,$Port" >> /tmp/sanction.$countryCode.rules;
                         done
                         for i in $(cat /tmp/$countryCode.zone) ;
-                                do echo "ipset del sanction-port $i,$Port" >> /tmp/sanction.remove.$countryCode.rules;
+                                do echo "ipset del sanction-port $i,$Port" >> /tmp/sanction.remove.$countryCode.$current_time.rules;
                         done
                 fi
 
-                echo "rm /tmp/sanction.remove.$countryCode.rules;" >> /tmp/sanction.remove.$countryCode.rules;
+                echo "rm /tmp/sanction.remove.$countryCode.$current_time.rules;" >> /tmp/sanction.remove.$countryCode.$current_time.rules;
 
                 echo "Applying IPset rules..."
                 chmod +x /tmp/sanction.$countryCode.rules;
-                chmod +x /tmp/sanction.remove.$countryCode.rules;
+                chmod +x /tmp/sanction.remove.$countryCode.$current_time.rules;
                 /tmp/sanction.$countryCode.rules;
 
                 echo "Rules applied. To remove them, run the command (as root):"
                 echo
-                echo "/tmp/sanction.remove.$countryCode.rules"
+                echo "/tmp/sanction.remove.$countryCode.$current_time.rules"
 
         else
 
@@ -356,7 +357,7 @@ else
                 echo
 
                 echo "#!/bin/bash" > /tmp/sanction.$countryCode.rules;
-                echo "#!/bin/bash" > /tmp/sanction.remove.$countryCode.rules;
+                echo "#!/bin/bash" > /tmp/sanction.remove.$countryCode.$current_time.rules;
 
                 if [ $Port = "ALL" ] ; then
 
@@ -364,7 +365,7 @@ else
                                 do echo "ipset add sanction $i" >> /tmp/sanction.$countryCode.rules;
                         done
                         for i in $(cat /tmp/$countryCode.zone) ;
-                                do echo "ipset del sanction $i" >> /tmp/sanction.remove.$countryCode.rules;
+                                do echo "ipset del sanction $i" >> /tmp/sanction.remove.$countryCode.$current_time.rules;
                         done
 
                 else
@@ -372,22 +373,22 @@ else
                                 do echo "ipset add sanction-port $i,$Port" >> /tmp/sanction.$countryCode.rules;
                         done
                         for i in $(cat /tmp/$countryCode.zone) ;
-                                do echo "ipset del sanction-port $i,$Port" >> /tmp/sanction.remove.$countryCode.rules;
+                                do echo "ipset del sanction-port $i,$Port" >> /tmp/sanction.remove.$countryCode.$current_time.rules;
                         done
                 fi
 
-                echo "rm /tmp/sanction.remove.$countryCode.rules;" >> /tmp/sanction.remove.$countryCode.rules;
+                echo "rm /tmp/sanction.remove.$countryCode.$current_time.rules;" >> /tmp/sanction.remove.$countryCode.$current_time.rules;
 
                 echo
                 echo "Applying IPset rules..."
                 echo
                 chmod +x /tmp/sanction.$countryCode.rules;
-                chmod +x /tmp/sanction.remove.$countryCode.rules;
+                chmod +x /tmp/sanction.remove.$countryCode.$current_time.rules;
                 /tmp/sanction.$countryCode.rules;
 
                 echo "Rules applied. To remove them, run the command (as root):"
                 echo
-                echo "/tmp/sanction.remove.$countryCode.rules"
+                echo "/tmp/sanction.remove.$countryCode.$current_time.rules"
 
 
         fi

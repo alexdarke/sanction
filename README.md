@@ -32,6 +32,8 @@ Current wishlist: write the iptables rules into their own chain, multiple countr
 
 Changelog:
 
+1.0.1 : Added timestamps to /tmp generated remove files so that you can run multiple times and not overwrite the first run.
+
 1.0.0 : Fixed a bug with multiple word countries not resolving properly. Added missing countries to the list.
 
 0.9.5 : fixed a bug with ipset not honoring rules in 6.11-3
